@@ -3,7 +3,7 @@ import requests
 import time
 
 # ================= CONFIG =================
-ESP32_URL = "http://192.168.137.210/data"
+ESP32_URL = "http://40.89.144.50/data"
 REFRESH_SEC = 3
 
 st.set_page_config(
@@ -87,3 +87,4 @@ while True:
         st.error("❌ ESP32 non accessible")
 
     time.sleep(REFRESH_SEC)
+
