@@ -5,7 +5,7 @@ import time
 import paho.mqtt.client as mqtt
 
 # ================== MQTT CONFIG ==================
-MQTT_BROKER = "40.89.144.50"
+MQTT_BROKER = "192.168.137.221"
 MQTT_PORT   = 1883
 MQTT_TOPIC  = "iot/node1/data"
 
