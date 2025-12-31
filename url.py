@@ -6,7 +6,7 @@ from datetime import datetime
 
 # ===================== CONFIG =====================
 API_DATA_URL = "https://nodered.mutambac.publicvm.com/api/data"
-API_CMD_URL  = "https://nodered.mutambac.publicvm.com/api/node2/cmd"
+API_CMD_URL  = "https://nodered.mutambac.publicvm.com/api/node2/data"
 REFRESH_MS = 2000
 
 # ===================== PAGE CONFIG =====================
