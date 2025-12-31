@@ -22,7 +22,7 @@ st_autorefresh(interval=REFRESH_MS, key="refresh")
 # ===================== TITRE =====================
 st.markdown("""
 # 📡 ESP32 Smart Dashboard  
-**MQTT → Node-RED → Streamlit Cloud**  
+**Supervision & Commande via MQTT / Node-RED**
 """)
 
 # ===================== LECTURE API =====================
@@ -30,82 +30,83 @@ try:
     response = requests.get(API_DATA_URL, timeout=3)
     data = response.json()
 except:
-    st.error(" Impossible de récupérer les données Node-RED")
+    st.error("❌ Impossible de récupérer les données Node-RED")
     st.stop()
 
 # ===================== EXTRACTION =====================
-temperature = data.get("temperature", 0)
-humidity    = data.get("humidity", 0)
-luminosity  = data.get("luminosity", 0)
-sound       = data.get("sound", 0)
-timestamp   = data.get("timestamp", datetime.now().isoformat())
+temperature = float(data.get("temperature", 0))
+humidity    = float(data.get("humidity", 0))
+luminosity  = int(data.get("luminosity", 0))
+sound       = int(data.get("sound", 0))
+timestamp   = datetime.now()
 
 # ===================== METRICS =====================
 c1, c2, c3, c4 = st.columns(4)
-c1.metric("🌡 Température (°C)", f"{temperature}")
-c2.metric("💧 Humidité (%)", f"{humidity}")
-c3.metric("💡 Luminosité", f"{luminosity}")
-c4.metric("🔊 Son", f"{sound}")
+c1.metric("🌡 Température (°C)", f"{temperature:.1f}")
+c2.metric("💧 Humidité (%)", f"{humidity:.1f}")
+c3.metric("💡 Luminosité", luminosity)
+c4.metric("🔊 Son", sound)
 
 st.divider()
 
-# ===================== GRAPHIQUES =====================
-st.subheader("📈 Historique temps réel")
+# ===================== HISTORIQUE =====================
+if "history" not in st.session_state:
+    st.session_state.history = pd.DataFrame(
+        columns=["Time", "Température", "Humidité", "Luminosité", "Son"]
+    )
 
-df = pd.DataFrame({
-    "Température": [temperature],
-    "Humidité": [humidity],
-    "Luminosité": [luminosity],
-    "Son": [sound]
-})
+# Ajouter nouvelle ligne
+new_row = {
+    "Time": timestamp,
+    "Température": temperature,
+    "Humidité": humidity,
+    "Luminosité": luminosity,
+    "Son": sound
+}
+st.session_state.history = pd.concat(
+    [st.session_state.history, pd.DataFrame([new_row])],
+    ignore_index=True
+).tail(30)  # garder les 30 derniers points
+
+df = st.session_state.history.set_index("Time")
+
+# ===================== GRAPHIQUES =====================
+st.subheader("📈 Évolution des capteurs")
 
 colg1, colg2 = st.columns(2)
+
 with colg1:
+    st.markdown("### 🌡 Température / 💧 Humidité")
     st.line_chart(df[["Température", "Humidité"]])
 
 with colg2:
-    st.bar_chart(df[["Luminosité", "Son"]])
+    st.markdown("### 💡 Luminosité / 🔊 Son")
+    st.area_chart(df[["Luminosité", "Son"]])
 
 st.divider()
 
 # ===================== COMMANDES =====================
-st.subheader("🎛 Commandes ESP32 (via Node-RED)")
+st.subheader("🎛 Commande LED ESP32 #2 (GPIO15)")
 
-col_cmd1, col_cmd2 = st.columns(2)
+col_led1, col_led2 = st.columns(2)
 
-# ---- RGB ----
-with col_cmd1:
-    st.markdown("### LED RGB")
-    color = st.color_picker("Choisir une couleur", "#FF0000")
-
-    if st.button("🚀 Envoyer couleur"):
-        r = int(color[1:3], 16)
-        g = int(color[3:5], 16)
-        b = int(color[5:7], 16)
-
-        payload = {
-            "rgb": {"r": r, "g": g, "b": b}
-        }
-
+with col_led1:
+    if st.button("💡 LED ON"):
+        payload = {"led": True}
         try:
             requests.post(API_CMD_URL, json=payload, timeout=3)
-            st.success(f"Couleur envoyée → R:{r} G:{g} B:{b}")
+            st.success("LED ESP32 #2 ALLUMÉE")
         except:
-            st.error("Erreur envoi couleur")
+            st.error("Erreur envoi commande LED")
 
-# ---- MODE NUIT ----
-with col_cmd2:
-    st.markdown("### 🌙 Mode Nuit")
-
-    if st.button("🌙 Activer mode nuit"):
-        payload = {"night": 1}
-        requests.post(API_CMD_URL, json=payload)
-        st.success("Mode nuit ACTIVÉ")
-
-    if st.button("☀ Désactiver mode nuit"):
-        payload = {"night": 0}
-        requests.post(API_CMD_URL, json=payload)
-        st.success("Mode nuit DÉSACTIVÉ")
+with col_led2:
+    if st.button("⚫ LED OFF"):
+        payload = {"led": False}
+        try:
+            requests.post(API_CMD_URL, json=payload, timeout=3)
+            st.success("LED ESP32 #2 ÉTEINTE")
+        except:
+            st.error("Erreur envoi commande LED")
 
 st.divider()
 
