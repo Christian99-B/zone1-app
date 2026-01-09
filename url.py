@@ -6,31 +6,27 @@ from datetime import datetime
 
 # ===================== CONFIG =====================
 API_DATA_URL = "https://nodered.mutambac.publicvm.com/api/data"
-API_CMD_URL  = "https://nodered.mutambac.publicvm.com/api/node2/data"
+API_CMD_URL  = "https://nodered.mutambac.publicvm.com/api/node1/data"
 REFRESH_MS = 2000
 
-# ===================== PAGE CONFIG =====================
+# ===================== PAGE =====================
 st.set_page_config(
     page_title="ESP32 Smart Dashboard",
-    page_icon="📡",
+    page_icon=" ",
     layout="wide"
 )
 
-# ===================== AUTO REFRESH =====================
 st_autorefresh(interval=REFRESH_MS, key="refresh")
 
-# ===================== TITRE =====================
-st.markdown("""
-# 📡 ESP32 Smart Dashboard  
-**Supervision & Commande via MQTT / Node-RED**
-""")
+st.title("📡 ESP32 Smart Dashboard")
+st.caption("Supervision & Commande ESP32 via Node-RED / MQTT")
 
 # ===================== LECTURE API =====================
 try:
     response = requests.get(API_DATA_URL, timeout=3)
     data = response.json()
 except:
-    st.error("❌ Impossible de récupérer les données Node-RED")
+    st.error("Impossible de récupérer les données")
     st.stop()
 
 # ===================== EXTRACTION =====================
@@ -55,7 +51,6 @@ if "history" not in st.session_state:
         columns=["Time", "Température", "Humidité", "Luminosité", "Son"]
     )
 
-# Ajouter nouvelle ligne
 new_row = {
     "Time": timestamp,
     "Température": temperature,
@@ -63,50 +58,66 @@ new_row = {
     "Luminosité": luminosity,
     "Son": sound
 }
+
 st.session_state.history = pd.concat(
     [st.session_state.history, pd.DataFrame([new_row])],
     ignore_index=True
-).tail(30)  # garder les 30 derniers points
+).tail(60)
 
 df = st.session_state.history.set_index("Time")
 
 # ===================== GRAPHIQUES =====================
-st.subheader("📈 Évolution des capteurs")
+st.subheader("📈 Graphiques des capteurs")
 
-colg1, colg2 = st.columns(2)
+g1, g2 = st.columns(2)
+g3, g4 = st.columns(2)
 
-with colg1:
-    st.markdown("### 🌡 Température / 💧 Humidité")
-    st.line_chart(df[["Température", "Humidité"]])
+with g1:
+    st.markdown("### 🌡 Température")
+    st.line_chart(df["Température"])
 
-with colg2:
-    st.markdown("### 💡 Luminosité / 🔊 Son")
-    st.area_chart(df[["Luminosité", "Son"]])
+with g2:
+    st.markdown("### 💧 Humidité")
+    st.line_chart(df["Humidité"])
+
+with g3:
+    st.markdown("### 💡 Luminosité (LDR)")
+    st.line_chart(df["Luminosité"])
+
+with g4:
+    st.markdown("### 🔊 Son")
+    st.line_chart(df["Son"])
 
 st.divider()
 
 # ===================== COMMANDES =====================
-st.subheader("🎛 Commande LED ESP32 #2 (GPIO15)")
+st.subheader("🎛 Commandes ESP32")
 
-col_led1, col_led2 = st.columns(2)
+c_led1, c_led2, c_led3, c_motor = st.columns(4)
 
-with col_led1:
-    if st.button("💡 LED ON"):
-        payload = {"led": True}
-        try:
-            requests.post(API_CMD_URL, json=payload, timeout=3)
-            st.success("LED ESP32 #2 ALLUMÉE")
-        except:
-            st.error("Erreur envoi commande LED")
+# 🔴 LED ROUGE
+with c_led1:
+    if st.button("🔴 LED Rouge"):
+        requests.post(API_CMD_URL, json={"rgb": {"r":255,"g":0,"b":0}})
+        st.success("LED Rouge ON")
 
-with col_led2:
-    if st.button("⚫ LED OFF"):
-        payload = {"led": False}
-        try:
-            requests.post(API_CMD_URL, json=payload, timeout=3)
-            st.success("LED ESP32 #2 ÉTEINTE")
-        except:
-            st.error("Erreur envoi commande LED")
+# 🟢 LED VERTE
+with c_led2:
+    if st.button("🟢 LED Verte"):
+        requests.post(API_CMD_URL, json={"rgb": {"r":0,"g":255,"b":0}})
+        st.success("LED Verte ON")
+
+# 🔵 LED BLEUE
+with c_led3:
+    if st.button("🔵 LED Bleue"):
+        requests.post(API_CMD_URL, json={"rgb": {"r":0,"g":0,"b":255}})
+        st.success("LED Bleue ON")
+
+# ⚙️ MOTEUR
+with c_motor:
+    if st.button("⚙️ MOTEUR ON / OFF"):
+        requests.post(API_CMD_URL, json={"motor": 1})
+        st.success("Commande moteur envoyée")
 
 st.divider()
 
