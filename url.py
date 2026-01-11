@@ -23,7 +23,7 @@ st.write("Affichage des données en temps réel depuis l'ESP32")
 temperature = st.empty()
 humidity = st.empty()
 sound = st.empty()
-luminosity = st.empty()
+luminosity = st.empty()  
 
 # Rafraîchissement des données toutes les 5 secondes
 while True:
