@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-# URL de l'API Node-RED pour contrôler les LED RGB (sans la LED rouge)
+# URL de l'API Node-RED pour contrôler les LED RGB
 url_rgb_green_on = "https://nodered.mutambac.publicvm.com/api/rgb_green_on"
 url_rgb_green_off = "https://nodered.mutambac.publicvm.com/api/rgb_green_off"
 url_rgb_blue_on = "https://nodered.mutambac.publicvm.com/api/rgb_blue_on"
@@ -47,8 +47,9 @@ st.markdown(
     body {
         background-color: #003366; /* Couleur de fond générale - bleu foncé */
         color: white; /* Couleur du texte */
-        width: 100%; /* Prendre toute la largeur de l'écran */
+        font-family: 'Arial', sans-serif; /* Police moderne */
         margin: 0;
+        padding: 0;
     }
     .css-1lcbv6s {
         background-color: #002244; /* Couleur du fond du titre - bleu foncé */
@@ -57,6 +58,7 @@ st.markdown(
     h1 {
         font-size: 40px;
         text-align: center;
+        margin-top: 20px;
     }
     h2 {
         font-size: 28px;
@@ -65,11 +67,12 @@ st.markdown(
     }
     .value-box {
         padding: 20px;
-        margin: 10px;
-        border-radius: 10px;
+        margin: 20px;
+        border-radius: 15px;
         color: white;
-        font-size: 26px;
+        font-size: 24px;
         text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombres */
     }
     .temp { background-color: #FF6347; }
     .humidity { background-color: #4682B4; }
@@ -79,7 +82,6 @@ st.markdown(
         text-align: center;
         margin-top: 20px;
     }
-
     /* Rectangle en arrière-plan mauve */
     .background-container {
         position: absolute;
@@ -90,7 +92,22 @@ st.markdown(
         background-color: #8A2BE2; /* Couleur mauve */
         z-index: -1; /* Mettre ce rectangle en arrière-plan */
         padding: 20px;
-        border-radius: 15px;
+        border-radius: 20px;
+    }
+
+    .stButton>button {
+        background-color: #005792; /* Couleur du fond du bouton */
+        color: white; /* Texte du bouton */
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease;
+    }
+    .stButton>button:hover {
+        background-color: #003C57; /* Couleur du bouton au survol */
     }
     </style>
     """, unsafe_allow_html=True)
