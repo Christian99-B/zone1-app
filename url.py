@@ -38,19 +38,44 @@ def get_data():
         return None
 
 # Appliquer du style au tableau de bord
-st.title("Tableau de bord IoT", anchor="top")
+st.title("Travail final SE et INDUSTRIE 4.0 A304/A311", anchor="top")
 
-# Personnaliser la couleur de l'interface
+# Personnaliser la couleur de l'interface avec un bleu foncé
 st.markdown(
     """
     <style>
     body {
-        background-color: #f4f4f9; /* Couleur de fond générale */
-        color: #333; /* Couleur du texte */
+        background-color: #003366; /* Couleur de fond générale - bleu foncé */
+        color: white; /* Couleur du texte */
     }
     .css-1lcbv6s {
-        background-color: #005792; /* Couleur du fond du titre */
+        background-color: #002244; /* Couleur du fond du titre - bleu foncé */
         color: white; /* Couleur du texte */
+    }
+    h1 {
+        font-size: 40px;
+        text-align: center;
+    }
+    h2 {
+        font-size: 28px;
+        color: #D1E8E2; /* Couleur claire pour le sous-titre */
+        text-align: center;
+    }
+    .value-box {
+        padding: 20px;
+        margin: 10px;
+        border-radius: 10px;
+        color: white;
+        font-size: 26px;
+        text-align: center;
+    }
+    .temp { background-color: #FF6347; }
+    .humidity { background-color: #4682B4; }
+    .sound { background-color: #32CD32; }
+    .luminosity { background-color: #FFD700; }
+    .button-container {
+        text-align: center;
+        margin-top: 20px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -58,63 +83,39 @@ st.markdown(
 # Affichage des valeurs avec des couleurs et des rectangles
 data = get_data()
 if data:
-    st.markdown("<h2 style='text-align: center; color: #3E4E60;'>Affichage des données en temps réel depuis l'ESP32</h2>", unsafe_allow_html=True)
+    st.markdown("<h2>Affichage des données en temps réel depuis l'ESP32</h2>", unsafe_allow_html=True)
 
     # Rectangle pour la température
-    st.markdown(
-        f"""
-        <div style="background-color:#FF6347; padding:20px; margin:10px; border-radius:10px; color:white; font-size:26px; text-align:center;">
-            Température (°C): {data['temperature']} °C
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f'<div class="value-box temp">Température (°C): {data["temperature"]} °C</div>', unsafe_allow_html=True)
 
     # Rectangle pour l'humidité
-    st.markdown(
-        f"""
-        <div style="background-color:#4682B4; padding:20px; margin:10px; border-radius:10px; color:white; font-size:26px; text-align:center;">
-            Humidité (%): {data['humidity']} %
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f'<div class="value-box humidity">Humidité (%): {data["humidity"]} %</div>', unsafe_allow_html=True)
 
     # Rectangle pour le son
-    st.markdown(
-        f"""
-        <div style="background-color:#32CD32; padding:20px; margin:10px; border-radius:10px; color:white; font-size:26px; text-align:center;">
-            Son: {data['sound']}
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f'<div class="value-box sound">Son: {data["sound"]}</div>', unsafe_allow_html=True)
 
     # Rectangle pour la luminosité
-    st.markdown(
-        f"""
-        <div style="background-color:#FFD700; padding:20px; margin:10px; border-radius:10px; color:white; font-size:26px; text-align:center;">
-            Luminosité: {data['luminosity']}
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f'<div class="value-box luminosity">Luminosité: {data["luminosity"]}</div>', unsafe_allow_html=True)
 
     # Commandes pour la LED Verte
     col1, col2 = st.columns(2)
     with col1:
-        # Ajout d'un encadrement coloré pour le bouton "Allumer LED Verte"
-        if st.button("Allumer LED Verte", key="green_on", help="Allumer la LED verte", use_container_width=True):
+        if st.button("Allumer LED Verte"):
             control_rgb("green", "on")
             st.success("LED Verte allumée")
     with col2:
-        # Ajout d'un encadrement coloré pour le bouton "Éteindre LED Verte"
-        if st.button("Éteindre LED Verte", key="green_off", help="Éteindre la LED verte", use_container_width=True):
+        if st.button("Éteindre LED Verte"):
             control_rgb("green", "off")
             st.success("LED Verte éteinte")
 
     # Commandes pour la LED Bleue
     col3, col4 = st.columns(2)
     with col3:
-        # Ajout d'un encadrement coloré pour le bouton "Allumer LED Bleue"
-        if st.button("Allumer LED Bleue", key="blue_on", help="Allumer la LED bleue", use_container_width=True):
+        if st.button("Allumer LED Bleue"):
             control_rgb("blue", "on")
             st.success("LED Bleue allumée")
     with col4:
-        # Ajout d'un encadrement coloré pour le bouton "Éteindre LED Bleue"
-        if st.button("Éteindre LED Bleue", key="blue_off", help="Éteindre la LED bleue", use_container_width=True):
+        if st.button("Éteindre LED Bleue"):
             control_rgb("blue", "off")
             st.success("LED Bleue éteinte")
 
