@@ -1,7 +1,23 @@
 import streamlit as st
 import requests
 
-# URL de l'API Node-RED
+# URL de l'API Node-RED pour contrôler les LED RGB
+url_rgb_on = "https://nodered.mutambac.publicvm.com/api/rgb_on"
+url_rgb_off = "https://nodered.mutambac.publicvm.com/api/rgb_off"
+
+# Fonction pour envoyer les commandes aux LED RGB
+def control_rgb(command):
+    try:
+        if command == "on":
+            response = requests.post(url_rgb_on)
+        elif command == "off":
+            response = requests.post(url_rgb_off)
+        response.raise_for_status()
+        return response.json()  # Vous pouvez traiter la réponse si nécessaire
+    except requests.exceptions.RequestException as e:
+        st.error(f"Erreur lors du contrôle des LED RGB : {e}")
+
+# URL de l'API Node-RED pour récupérer les données des capteurs
 url = "https://nodered.mutambac.publicvm.com/api/data"
 
 # Fonction pour obtenir les données depuis Node-RED
@@ -53,6 +69,17 @@ if data:
             Luminosité: {data['luminosity']}
         </div>
         """, unsafe_allow_html=True)
+
+    # Boutons pour allumer et éteindre les LED RGB
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Allumer LED RGB"):
+            control_rgb("on")
+            st.success("LED RGB allumée")
+    with col2:
+        if st.button("Éteindre LED RGB"):
+            control_rgb("off")
+            st.success("LED RGB éteinte")
 
 # Rafraîchissement manuel avec un bouton
 if st.button('Rafraîchir les données'):
