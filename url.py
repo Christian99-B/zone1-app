@@ -45,8 +45,8 @@ st.markdown(
     """
     <style>
     body {
-        background-color: #809523; /* Couleur de fond générale - bleu foncé */
-        color: red; /* Couleur du texte */
+        background-color: #003366; /* Couleur de fond générale - bleu foncé */
+        color: white; /* Couleur du texte */
         width: 100%; /* Prendre toute la largeur de l'écran */
         margin: 0;
     }
@@ -79,8 +79,24 @@ st.markdown(
         text-align: center;
         margin-top: 20px;
     }
+
+    /* Rectangle en arrière-plan mauve */
+    .background-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #8A2BE2; /* Couleur mauve */
+        z-index: -1; /* Mettre ce rectangle en arrière-plan */
+        padding: 20px;
+        border-radius: 15px;
+    }
     </style>
     """, unsafe_allow_html=True)
+
+# Ajouter le rectangle en arrière-plan
+st.markdown('<div class="background-container"></div>', unsafe_allow_html=True)
 
 # Affichage des valeurs avec des couleurs et des rectangles
 data = get_data()
