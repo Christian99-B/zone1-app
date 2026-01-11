@@ -1,65 +1,79 @@
 import streamlit as st
 import requests
+import matplotlib.pyplot as plt
 
-
-# Fonction pour récupérer les données depuis l'API
+# Fonction pour récupérer les données depuis l'API Node-RED
 def get_data():
     try:
-        response = requests.get('https://nodered.mutambac.publicvm.com/api/data')  #  serveur Node-RED
+        url = 'http://votre_serveur_node_red/api/data'  # Remplacez par l'URL de votre API
+        response = requests.get(url)
+        
         if response.status_code == 200:
-            data = response.json()
-            return data
+            return response.json()
         else:
-            st.error("Échec de la récupération des données !")
+            st.error(f"Erreur lors de la récupération des données (code {response.status_code})")
             return None
     except requests.exceptions.RequestException as e:
-        st.error(f"Erreur lors de la récupération des données : {e}")
+        st.error(f"Erreur de connexion : {e}")
         return None
 
 # Configuration de la page Streamlit
-st.set_page_config(page_title="Données des capteurs", layout="wide")
+st.set_page_config(page_title="Dashboard IoT", layout="wide")
 
-# Récupération des données
+# Personnalisation des couleurs
+st.markdown(
+    """
+    <style>
+    .main {background-color: #f0f2f6;}
+    h1 {color: #2f4f4f;}
+    h2 {color: #4682b4;}
+    .stButton>button {background-color: #4682b4; color: white;}
+    .stButton>button:hover {background-color: #5a8dca;}
+    </style>
+    """, unsafe_allow_html=True)
+
+# Titre du dashboard
+st.title("Dashboard IoT - Données des Capteurs")
+
+# Récupérer les données
 data = get_data()
 
 if data:
-    # Affichage des données dans Streamlit
-    st.title("Données des Capteurs")
+    # Affichage des données sous forme de cards (secteurs avec des couleurs)
+    col1, col2 = st.columns(2)
 
-    st.subheader("Température")
-    st.write(f"{data['temperature']} °C")
+    with col1:
+        st.subheader("Température")
+        st.markdown(f"<h3 style='color:#FF6347;'>{data['temperature']} °C</h3>", unsafe_allow_html=True)
+    
+    with col2:
+        st.subheader("Humidité")
+        st.markdown(f"<h3 style='color:#20B2AA;'>{data['humidity']} %</h3>", unsafe_allow_html=True)
 
-    st.subheader("Humidité")
-    st.write(f"{data['humidity']} %")
+    col3, col4 = st.columns(2)
 
-    st.subheader("Luminosité")
-    st.write(f"{data['luminosity']} (valeur brute)")
+    with col3:
+        st.subheader("Luminosité")
+        st.markdown(f"<h3 style='color:#FFD700;'>{data['luminosity']} (valeur brute)</h3>", unsafe_allow_html=True)
+    
+    with col4:
+        st.subheader("Son")
+        st.markdown(f"<h3 style='color:#8A2BE2;'>{data['sound']} (valeur brute)</h3>", unsafe_allow_html=True)
 
-    st.subheader("Son")
-    st.write(f"{data['sound']} (valeur brute)")
+    # Ajout d'un graphique pour la visualisation des données
+    st.markdown("### Graphique des données des capteurs")
+
+    fig, ax = plt.subplots()
+    sensors = ['Température', 'Humidité', 'Luminosité', 'Son']
+    values = [data['temperature'], data['humidity'], data['luminosity'], data['sound']]
+
+    ax.bar(sensors, values, color=['#FF6347', '#20B2AA', '#FFD700', '#8A2BE2'])
+    ax.set_xlabel('Capteurs')
+    ax.set_ylabel('Valeur')
+    ax.set_title('Comparaison des données des capteurs')
+    
+    # Affichage du graphique dans Streamlit
+    st.pyplot(fig)
 
 else:
     st.warning("Aucune donnée disponible pour le moment.")
-
-# Fonction pour obtenir les données de Node-RED
-def get_data():
-    url = "https://nodered.mutambac.publicvm.com/api/data"  # URL de l'API Node-RED
-    response = requests.get(url)
-    return response.json()  # Suppose que Node-RED renvoie un JSON avec les données
-
-# Affichage des données dans Streamlit
-st.title("Mon Dashboard IoT")
-data = get_data()
-
-if data:
-    st.write(f"Température: {data['temperature']} °C")
-    st.write(f"Humidité: {data['humidity']} %")
-    st.write(f"Luminosité: {data['luminosity']}")
-    st.write(f"Son: {data['sound']}")
-
-    # Ajout du slider pour la LED RGB en PWM
-    rgb_slider = st.slider("Contrôle de la LED RGB", min_value=0, max_value=255, value=128)
-    # Vous pouvez envoyer cette valeur à Node-RED pour ajuster la LED
-    # Exemple pour envoyer à Node-RED via une requête HTTP
-    payload = {'rgb_value': rgb_slider}
-    requests.post("http://<node-red-ip>:<port>/path/to/led_control", json=payload)
