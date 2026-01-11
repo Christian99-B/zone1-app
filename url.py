@@ -24,7 +24,7 @@ st.set_page_config(page_title="Dashboard IoT", layout="wide")
 st.markdown(
     """
     <style>
-    .main {background-color: #f0f2f6;}
+    .main {background-color: #f0f2f6;} 
     h1 {color: #2f4f4f;} 
     h2 {color: #4682b4;}
     .stButton>button {background-color: #4682b4; color: white;}
