@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import time
 
 # URL de l'API Node-RED
 url = "https://nodered.mutambac.publicvm.com/api/data"
@@ -36,9 +35,6 @@ if data:
     st.markdown('<p style="color:#5B9BD5; font-size:20px;">Luminosité</p>', unsafe_allow_html=True)
     st.metric(label="Luminosité", value=f"{data['luminosity']}", delta=None, delta_color="normal", help="Luminosité mesurée par le capteur LDR")
 
-# Rafraîchissement des données toutes les 5 secondes
-while True:
-    data = get_data()
-    if data:
-        st.experimental_rerun()
-    time.sleep(5)  # Rafraîchissement toutes les 5 secondes
+# Rafraîchissement manuel avec un bouton
+if st.button('Rafraîchir les données'):
+    st.experimental_rerun()
