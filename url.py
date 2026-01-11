@@ -25,7 +25,7 @@ st.markdown(
     """
     <style>
     .main {background-color: #f0f2f6;}
-    h1 {color: #2f4f4f;}
+    h1 {color: #2f4f4f;} 
     h2 {color: #4682b4;}
     .stButton>button {background-color: #4682b4; color: white;}
     .stButton>button:hover {background-color: #5a8dca;}
