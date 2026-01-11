@@ -17,23 +17,42 @@ def get_data():
 # Appliquer du style au tableau de bord
 st.title("Tableau de bord IoT", anchor="top")
 
-# Affichage des valeurs avec des couleurs et des améliorations de style
+# Affichage des valeurs avec des couleurs et des rectangles
 data = get_data()
 if data:
     st.markdown("<h2 style='text-align: center; color: #3E4E60;'>Affichage des données en temps réel depuis l'ESP32</h2>", unsafe_allow_html=True)
 
-    # Utilisation des couleurs dans les metrics
-    st.markdown('<p style="color:#FF6347; font-size:20px;">Température (°C)</p>', unsafe_allow_html=True)
-    st.metric(label="Température", value=f"{data['temperature']} °C", delta=None, delta_color="normal", help="Température mesurée par le capteur DHT11")
+    # Rectangle pour la température
+    st.markdown(
+        f"""
+        <div style="background-color:#FF6347; padding:20px; margin:10px; border-radius:10px; color:white; font-size:24px; text-align:center;">
+            Température (°C): {data['temperature']} °C
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown('<p style="color:#4682B4; font-size:20px;">Humidité (%)</p>', unsafe_allow_html=True)
-    st.metric(label="Humidité", value=f"{data['humidity']} %", delta=None, delta_color="normal", help="Humidité mesurée par le capteur DHT11")
+    # Rectangle pour l'humidité
+    st.markdown(
+        f"""
+        <div style="background-color:#4682B4; padding:20px; margin:10px; border-radius:10px; color:white; font-size:24px; text-align:center;">
+            Humidité (%): {data['humidity']} %
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown('<p style="color:#32CD32; font-size:20px;">Son</p>', unsafe_allow_html=True)
-    st.metric(label="Son", value=f"{data['sound']}", delta=None, delta_color="normal", help="Niveau sonore mesuré")
+    # Rectangle pour le son
+    st.markdown(
+        f"""
+        <div style="background-color:#32CD32; padding:20px; margin:10px; border-radius:10px; color:white; font-size:24px; text-align:center;">
+            Son: {data['sound']}
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown('<p style="color:#FFD700; font-size:20px;">Luminosité</p>', unsafe_allow_html=True)
-    st.metric(label="Luminosité", value=f"{data['luminosity']}", delta=None, delta_color="normal", help="Luminosité mesurée par le capteur LDR")
+    # Rectangle pour la luminosité
+    st.markdown(
+        f"""
+        <div style="background-color:#FFD700; padding:20px; margin:10px; border-radius:10px; color:white; font-size:24px; text-align:center;">
+            Luminosité: {data['luminosity']}
+        </div>
+        """, unsafe_allow_html=True)
 
 # Rafraîchissement manuel avec un bouton
 if st.button('Rafraîchir les données'):
