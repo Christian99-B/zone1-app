@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-<<<<<<< HEAD
+
 # Fonction pour récupérer les données depuis l'API
 def get_data():
     try:
@@ -40,7 +40,7 @@ if data:
 
 else:
     st.warning("Aucune donnée disponible pour le moment.")
-=======
+
 # Fonction pour obtenir les données de Node-RED
 def get_data():
     url = "http://<node-red-ip>:<port>/api/data"  # URL de l'API Node-RED
