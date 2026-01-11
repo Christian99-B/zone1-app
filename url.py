@@ -40,13 +40,15 @@ def get_data():
 # Appliquer du style au tableau de bord
 st.title("Travail final SE et INDUSTRIE 4.0 A304/A311", anchor="top")
 
-# Personnaliser la couleur de l'interface avec un bleu foncé
+# Personnaliser la couleur de l'interface et occuper toute la largeur de l'écran
 st.markdown(
     """
     <style>
     body {
-        background-color: #003366; /* Couleur de fond générale - bleu foncé */
+        background-color: #809523; /* Couleur de fond générale - bleu foncé */
         color: white; /* Couleur du texte */
+        width: 100%; /* Prendre toute la largeur de l'écran */
+        margin: 0;
     }
     .css-1lcbv6s {
         background-color: #002244; /* Couleur du fond du titre - bleu foncé */
