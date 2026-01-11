@@ -43,7 +43,7 @@ else:
 
 # Fonction pour obtenir les données de Node-RED
 def get_data():
-    url = "http://<node-red-ip>:<port>/api/data"  # URL de l'API Node-RED
+    url = "https://nodered.mutambac.publicvm.com/api/data"  # URL de l'API Node-RED
     response = requests.get(url)
     return response.json()  # Suppose que Node-RED renvoie un JSON avec les données
 
