@@ -46,7 +46,7 @@ st.markdown(
     <style>
     body {
         background-color: #809523; /* Couleur de fond générale - bleu foncé */
-        color: white; /* Couleur du texte */
+        color: red; /* Couleur du texte */
         width: 100%; /* Prendre toute la largeur de l'écran */
         margin: 0;
     }
