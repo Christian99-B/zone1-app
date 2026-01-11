@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Fonction pour récupérer les données depuis l'API Node-RED
 def get_data():
     try:
-        url = 'http://votre_serveur_node_red/api/data'  # Remplacez par l'URL de votre API
+        url = 'https://nodered.mutambac.publicvm.com/api/data'  # Remplacez par l'URL de votre API
         response = requests.get(url)
         
         if response.status_code == 200:
