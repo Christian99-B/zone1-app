@@ -63,4 +63,3 @@ if data:
     # Exemple pour envoyer à Node-RED via une requête HTTP
     payload = {'rgb_value': rgb_slider}
     requests.post("http://<node-red-ip>:<port>/path/to/led_control", json=payload)
->>>>>>> 99f8d9906b794658b653508cf1f4d929758f3ac7
