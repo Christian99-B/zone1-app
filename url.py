@@ -5,7 +5,7 @@ import requests
 # Fonction pour récupérer les données depuis l'API
 def get_data():
     try:
-        response = requests.get('http://adresse_de_votre_serveur_node_red/api/data')  #  serveur Node-RED
+        response = requests.get('https://nodered.mutambac.publicvm.com/api/data')  #  serveur Node-RED
         if response.status_code == 200:
             data = response.json()
             return data
